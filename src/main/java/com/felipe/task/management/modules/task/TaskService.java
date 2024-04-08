@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.felipe.task.management.mapper.DozerMapper;
+import com.felipe.task.management.modules.task.dtos.TaskCreateDTO;
 import com.felipe.task.management.modules.task.exceptions.costumExceptions.ResourseNotFoundException;
 
 
@@ -17,24 +19,26 @@ public class TaskService {
     @Autowired
     private TaskRepository taskRepository;
 
-    public List<TaskEntity> read() {
+    public List<TaskCreateDTO> read() {
         logger.info("Find all tasks!");
-        return taskRepository.findAll();
+        return DozerMapper.parseListObjects(taskRepository.findAll(), TaskCreateDTO.class);
     }
 
-    public TaskEntity findById(Long id) {
+    public TaskCreateDTO findById(Long id) {
         logger.info("Find task by id: " + id);
-        return taskRepository.findById(id)
-            .orElseThrow(() -> new ResourseNotFoundException("Task not found!"));
+        var task = taskRepository.findById(id)
+                .orElseThrow(() -> new ResourseNotFoundException("Task not found!"));
+        return DozerMapper.parseObject(task, TaskCreateDTO.class);
     }
-    
-
-    public TaskEntity create(TaskEntity payload) {
-        var task = taskRepository.save(payload);
-        return task;
+        
+    public TaskCreateDTO create(TaskCreateDTO payload) {
+        logger.info("Create new task!");
+        var entity = DozerMapper.parseObject(payload, TaskEntity.class);
+        var vo = DozerMapper.parseObject(taskRepository.save(entity), TaskCreateDTO.class);
+        return vo;
     }
 
-    public TaskEntity update(TaskEntity task) {
+    public TaskCreateDTO update(TaskCreateDTO task) {
         logger.info("Update task by id: " + task.getId());
 
         var entity = taskRepository.findById(task.getId())
@@ -44,7 +48,8 @@ public class TaskService {
         entity.setStatus(task.getStatus());
         entity.setDescription(task.getDescription());
 
-        return taskRepository.save(entity);
+        var vo = DozerMapper.parseObject(taskRepository.save(entity), TaskCreateDTO.class);
+        return vo;
     }
 
 

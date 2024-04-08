@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+import com.felipe.task.management.modules.task.dtos.TaskCreateDTO;
 
 @RestController
 @RequestMapping("/task")
@@ -21,23 +22,24 @@ public class TaskController {
     @Autowired
     private TaskService taskService;
 
-   @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public List<TaskEntity> read() {
+    @GetMapping(produces = MediaType.APPLICATION_JSON_VALUE)
+    public List<TaskCreateDTO> read() {
         return taskService.read();
     }
 
     @GetMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public TaskEntity fingById(@PathVariable(value = "id") Long id) {
+    public TaskCreateDTO fingById(@PathVariable(value = "id") Long id) {
         return taskService.findById(id);
     }
 
     @PostMapping(produces = MediaType.APPLICATION_JSON_VALUE)
-    public TaskEntity create(@RequestBody TaskEntity payload) {
+    public TaskCreateDTO create(@RequestBody TaskCreateDTO payload) {
         return taskService.create(payload);
     }
 
     @PutMapping(value = "/{id}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public TaskEntity update(@RequestBody TaskEntity payload) {
+    public TaskCreateDTO update(@PathVariable("id") Long id, @RequestBody TaskCreateDTO payload) {
+        payload.setId(id); 
         return taskService.update(payload);
     }
 
