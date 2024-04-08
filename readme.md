@@ -30,3 +30,21 @@ O projeto está configurado para usar o PostgreSQL como banco de dados. Certifiq
 spring.datasource.url=jdbc:postgresql://localhost:5432/seu-banco-de-dados
 spring.datasource.username=seu-usuario
 spring.datasource.password=sua-senha
+
+
+```
+# Executando Projeto
+O aplicativo estará disponível em http://localhost:8080.
+```
+mvn clean install
+java -jar target/task-management-0.0.1-SNAPSHOT.war
+
+
+GET /tasks: Retorna todas as tarefas cadastradas.
+GET /tasks/{id}: Retorna uma tarefa específica pelo ID.
+POST /tasks: Cria uma nova tarefa.
+PUT /tasks/{id}: Atualiza uma tarefa existente pelo ID.
+DELETE /tasks/{id}: Exclui uma tarefa pelo ID
+
+
+
